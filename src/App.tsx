@@ -4,7 +4,7 @@ import DOMPurify from 'dompurify';
 import './App.css';
 
 function App(): React.ReactElement {
-  const [markdown, setMarkdown] = useState<string>('# Hello, Disposable Note!\n\nStart typing your markdown here. This note is disposable and will not be saved when you close the browser.\n\n## Features\n\n- **Bold** and *italic* text\n- Lists and checkboxes\n  - [ ] Todo item\n  - [x] Completed item\n- [Links](https://example.com)\n- Code blocks\n\n```js\nconsole.log("Hello, world!");\n```');
+  const [markdown, setMarkdown] = useState<string>('# Hello, Disposable Note! ✨\n\nStart typing your markdown here. This note is disposable and will not be saved when you close the browser.\n\n## Features\n\n- **Bold** and *italic* text\n- Lists and checkboxes\n  - [ ] Todo item\n  - [x] Completed item\n- [Links](https://example.com)\n- Code blocks\n\n```js\nconsole.log("Hello, world!");\n```\n\n> **Tip:** You can use keyboard shortcuts like Ctrl+B for bold and Ctrl+I for italic in many browsers!');
   const [html, setHtml] = useState<string>('');
 
   useEffect(() => {
@@ -25,7 +25,7 @@ function App(): React.ReactElement {
   return (
     <div className="app">
       <header>
-        <h1>Disposable Note</h1>
+        <h1>✏️ Disposable Note</h1>
         <button onClick={handleClear} className="clear-button">
           Clear
         </button>
@@ -50,7 +50,7 @@ function App(): React.ReactElement {
       </main>
       
       <footer>
-        <p>This note is disposable and will not be saved when you close the browser.</p>
+        <p>This note is disposable and will not be saved when you close the browser. <span style={{ opacity: 0.7 }}>Made with ❤️</span></p>
       </footer>
     </div>
   );

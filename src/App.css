@@ -4,42 +4,59 @@
   height: 100vh;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
+  background-color: #f8f9fa;
+  color: #2d3748;
 }
 
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 0;
-  border-bottom: 1px solid #e1e4e8;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 0.5rem;
 }
 
 header h1 {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 600;
-  color: #0366d6;
+  color: #3182ce;
+  letter-spacing: -0.5px;
+  transition: color 0.2s ease;
+}
+
+header h1:hover {
+  color: #2c5282;
 }
 
 .clear-button {
-  background-color: #f44336;
+  background-color: #e53e3e;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .clear-button:hover {
-  background-color: #d32f2f;
+  background-color: #c53030;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.clear-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .editor-container {
   display: flex;
   flex: 1;
-  gap: 1rem;
+  gap: 1.5rem;
   padding: 1rem 0;
   overflow: hidden;
 }
@@ -49,30 +66,39 @@ header h1 {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
   min-width: 400px;
   max-width: 50%;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.editor-pane:hover, .preview-pane:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08), 0 3px 6px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
 .markdown-editor {
   flex: 1;
-  padding: 1rem;
+  padding: 1.25rem;
   font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.6;
   border: none;
   resize: none;
   background-color: #fff;
-  color: #24292e;
+  color: #2d3748;
   outline: none;
+  transition: background-color 0.2s ease;
+  border-radius: 8px;
 }
 
 .markdown-preview {
   flex: 1;
-  padding: 1rem;
+  padding: 1.25rem;
   overflow-y: auto;
   background-color: #fff;
+  border-radius: 8px;
 }
 
 /* Markdown preview styles */
@@ -111,36 +137,43 @@ header h1 {
 }
 
 .markdown-preview a {
-  color: #0366d6;
+  color: #3182ce;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .markdown-preview a:hover {
+  color: #2c5282;
   text-decoration: underline;
 }
 
 .markdown-preview blockquote {
-  padding: 0 1rem;
-  color: #6a737d;
-  border-left: 0.25rem solid #dfe2e5;
-  margin-bottom: 1rem;
+  padding: 0.5rem 1.25rem;
+  color: #718096;
+  border-left: 0.25rem solid #cbd5e0;
+  margin-bottom: 1.25rem;
+  background-color: #f7fafc;
+  border-radius: 0 4px 4px 0;
 }
 
 .markdown-preview pre {
-  background-color: #f6f8fa;
-  border-radius: 3px;
-  padding: 1rem;
+  background-color: #f7fafc;
+  border-radius: 6px;
+  padding: 1.25rem;
   overflow: auto;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #edf2f7;
 }
 
 .markdown-preview code {
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-  font-size: 85%;
+  font-size: 90%;
   padding: 0.2em 0.4em;
   margin: 0;
-  background-color: rgba(27, 31, 35, 0.05);
-  border-radius: 3px;
+  background-color: #edf2f7;
+  border-radius: 4px;
+  color: #3182ce;
 }
 
 .markdown-preview pre code {
@@ -160,21 +193,28 @@ header h1 {
 }
 
 .markdown-preview table th, .markdown-preview table td {
-  padding: 0.5rem 1rem;
-  border: 1px solid #dfe2e5;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #e2e8f0;
 }
 
 .markdown-preview table th {
-  background-color: #f6f8fa;
+  background-color: #f7fafc;
   font-weight: 600;
+  color: #4a5568;
 }
 
 footer {
-  padding: 1rem 0;
+  padding: 1.25rem 0;
   text-align: center;
   font-size: 0.875rem;
-  color: #6a737d;
-  border-top: 1px solid #e1e4e8;
+  color: #718096;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+footer:hover {
+  color: #4a5568;
 }
 
 /* Responsive styles */
@@ -185,5 +225,18 @@ footer {
   
   .editor-pane, .preview-pane {
     min-height: 300px;
+    max-width: 100%;
+  }
+  
+  .app {
+    padding: 0 1rem;
+  }
+  
+  header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .clear-button {
+    padding: 0.5rem 1rem;
   }
 }
