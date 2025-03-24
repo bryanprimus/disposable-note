@@ -1,0 +1,189 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0366d6;
+}
+
+.clear-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.clear-button:hover {
+  background-color: #d32f2f;
+}
+
+.editor-container {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+  padding: 1rem 0;
+  overflow: hidden;
+}
+
+.editor-pane, .preview-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  min-width: 400px;
+  max-width: 50%;
+}
+
+.markdown-editor {
+  flex: 1;
+  padding: 1rem;
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  border: none;
+  resize: none;
+  background-color: #fff;
+  color: #24292e;
+  outline: none;
+}
+
+.markdown-preview {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: #fff;
+}
+
+/* Markdown preview styles */
+.markdown-preview h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #eaecef;
+}
+
+.markdown-preview h2 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #eaecef;
+}
+
+.markdown-preview h3 {
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-preview p {
+  margin-bottom: 1rem;
+}
+
+.markdown-preview ul, .markdown-preview ol {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+}
+
+.markdown-preview li {
+  margin-bottom: 0.25rem;
+}
+
+.markdown-preview a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
+.markdown-preview a:hover {
+  text-decoration: underline;
+}
+
+.markdown-preview blockquote {
+  padding: 0 1rem;
+  color: #6a737d;
+  border-left: 0.25rem solid #dfe2e5;
+  margin-bottom: 1rem;
+}
+
+.markdown-preview pre {
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  padding: 1rem;
+  overflow: auto;
+  margin-bottom: 1rem;
+}
+
+.markdown-preview code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 85%;
+  padding: 0.2em 0.4em;
+  margin: 0;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+}
+
+.markdown-preview pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.markdown-preview img {
+  max-width: 100%;
+  margin-bottom: 1rem;
+}
+
+.markdown-preview table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.markdown-preview table th, .markdown-preview table td {
+  padding: 0.5rem 1rem;
+  border: 1px solid #dfe2e5;
+}
+
+.markdown-preview table th {
+  background-color: #f6f8fa;
+  font-weight: 600;
+}
+
+footer {
+  padding: 1rem 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6a737d;
+  border-top: 1px solid #e1e4e8;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .editor-container {
+    flex-direction: column;
+  }
+  
+  .editor-pane, .preview-pane {
+    min-height: 300px;
+  }
+}
