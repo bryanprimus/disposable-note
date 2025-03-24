@@ -4,25 +4,74 @@
   padding: 0;
 }
 
+:root {
+  /* Light theme (default) */
+  --bg-color: #f8f9fa;
+  --text-color: #2d3748;
+  --code-bg: #edf2f7;
+  --code-color: #3182ce;
+  --border-color: #e2e8f0;
+  --heading-color: #3182ce;
+  --heading-hover: #2c5282;
+  --card-bg: #fff;
+  --blockquote-bg: #f7fafc;
+  --blockquote-color: #718096;
+  --blockquote-border: #cbd5e0;
+  --selection-bg: #bee3f8;
+  --selection-color: #2c5282;
+  --footer-color: #718096;
+  --footer-hover: #4a5568;
+  --shadow-color: rgba(0, 0, 0, 0.05);
+  --shadow-color-hover: rgba(0, 0, 0, 0.08);
+  --button-bg: #3182ce;
+  --button-color: white;
+  --button-hover-bg: #2c5282;
+}
+
+[data-theme="dark"] {
+  /* Dark theme */
+  --bg-color: #1a202c;
+  --text-color: #e2e8f0;
+  --code-bg: #2d3748;
+  --code-color: #90cdf4;
+  --border-color: #4a5568;
+  --heading-color: #90cdf4;
+  --heading-hover: #63b3ed;
+  --card-bg: #2d3748;
+  --blockquote-bg: #2d3748;
+  --blockquote-color: #a0aec0;
+  --blockquote-border: #4a5568;
+  --selection-bg: #2c5282;
+  --selection-color: #bee3f8;
+  --footer-color: #a0aec0;
+  --footer-hover: #e2e8f0;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --shadow-color-hover: rgba(0, 0, 0, 0.3);
+  --button-bg: #4a5568;
+  --button-color: white;
+  --button-hover-bg: #2d3748;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8f9fa;
-  color: #2d3748;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   line-height: 1.6;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-  background-color: #edf2f7;
+  background-color: var(--code-bg);
   padding: 2px 4px;
   border-radius: 4px;
-  color: #3182ce;
+  color: var(--code-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #root {
@@ -38,6 +87,6 @@ code {
 }
 
 ::selection {
-  background-color: #bee3f8;
-  color: #2c5282;
+  background-color: var(--selection-bg);
+  color: var(--selection-color);
 }
