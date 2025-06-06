@@ -168,6 +168,15 @@ body::after {
   padding: 2rem;
   gap: 2rem;
   overflow: hidden;
+  transition: grid-template-columns 0.5s ease;
+}
+
+.main-content.expanded {
+  grid-template-columns: 1fr;
+}
+
+.main-content.expanded .preview-area {
+  display: none;
 }
 
 .editor-area,

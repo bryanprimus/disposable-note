@@ -26,6 +26,7 @@ console.log("Hello, world!");
   );
   const [html, setHtml] = useState<string>('');
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   useEffect(() => {
     const raw = marked.parse(markdown, { breaks: true });
@@ -42,6 +43,13 @@ console.log("Hello, world!");
         <div className="logo">📝 Disposable Note</div>
         <div className="nav-controls">
           <button
+            onClick={() => setIsExpanded((d) => !d)}
+            className="icon-button"
+            title={isExpanded ? 'Collapse editor' : 'Expand editor'}
+          >
+            {isExpanded ? '↩️' : '↔️'}
+          </button>
+          <button
             onClick={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
             className="icon-button"
             title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
@@ -54,7 +62,7 @@ console.log("Hello, world!");
         </div>
       </nav>
 
-      <main className="main-content">
+      <main className={`main-content ${isExpanded ? 'expanded' : ''}`}>
         <aside className="editor-area">
           <textarea
             value={markdown}
