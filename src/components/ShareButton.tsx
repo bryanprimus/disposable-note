@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { b64EncodeUnicode } from '../utils/encoding';
+import { compressAndEncode } from '../utils/encoding';
 
 interface ShareButtonProps {
   content: string;
@@ -9,10 +9,8 @@ export const ShareButton: React.FC<ShareButtonProps> = ({ content }) => {
   const [showCopied, setShowCopied] = useState(false);
 
   const handleShare = async () => {
-    const encodedContent = b64EncodeUnicode(content);
-    const shareUrl = `${
-      window.location.origin
-    }/share?content=${encodeURIComponent(encodedContent)}`;
+    const compressedContent = compressAndEncode(content);
+    const shareUrl = `${window.location.origin}/share?content=${compressedContent}`;
 
     try {
       await navigator.clipboard.writeText(shareUrl);

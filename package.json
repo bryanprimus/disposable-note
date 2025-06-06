@@ -10,8 +10,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@types/lz-string": "^1.5.0",
     "@types/react-router-dom": "^5.3.3",
     "dompurify": "^3.0.6",
+    "lz-string": "^1.5.0",
     "marked": "^9.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

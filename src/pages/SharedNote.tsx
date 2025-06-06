@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
-import { b64DecodeUnicode } from '../utils/encoding';
+import { decompressAndDecode } from '../utils/encoding';
 
 export const SharedNote: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -17,11 +17,11 @@ export const SharedNote: React.FC = () => {
   useEffect(() => {
     const content = searchParams.get('content');
     if (content) {
-      try {
-        const decodedContent = b64DecodeUnicode(content);
+      const decodedContent = decompressAndDecode(content);
+      if (decodedContent !== null) {
         setMarkdown(decodedContent);
-      } catch {
-        setMarkdown('Error: Invalid shared content');
+      } else {
+        setMarkdown('Error: Could not decompress shared content. The link may be corrupted.');
       }
     }
   }, [searchParams]);
