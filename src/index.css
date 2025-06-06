@@ -1,83 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-:root {
-  /* Light theme (default) */
-  --bg-color: #f8f9fa;
-  --text-color: #2d3748;
-  --code-bg: #edf2f7;
-  --code-color: #3182ce;
-  --border-color: #e2e8f0;
-  --heading-color: #3182ce;
-  --heading-hover: #2c5282;
-  --card-bg: #fff;
-  --blockquote-bg: #f7fafc;
-  --blockquote-color: #718096;
-  --blockquote-border: #cbd5e0;
-  --selection-bg: #bee3f8;
-  --selection-color: #2c5282;
-  --footer-color: #718096;
-  --footer-hover: #4a5568;
-  --shadow-color: rgba(0, 0, 0, 0.05);
-  --shadow-color-hover: rgba(0, 0, 0, 0.08);
-  --button-bg: #3182ce;
-  --button-color: #fff;
-  --button-hover-bg: #2c5282;
+[data-theme='light'] {
+  --bg-color: #f0f2f5;
+  --text-color: #2c3e50;
+  --selection-bg: #e74c3c;
+  --selection-color: #ffffff;
 }
 
 [data-theme='dark'] {
-  --bg-color: #1a202c;
-  --text-color: #e2e8f0;
-  --code-bg: #2d3748;
-  --code-color: #90cdf4;
-  --border-color: #4a5568;
-  --heading-color: #90cdf4;
-  --heading-hover: #63b3ed;
-  --card-bg: #2d3748;
-  --blockquote-bg: #2d3748;
-  --blockquote-color: #a0aec0;
-  --blockquote-border: #4a5568;
-  --selection-bg: #2c5282;
-  --selection-color: #bee3f8;
-  --footer-color: #a0aec0;
-  --footer-hover: #e2e8f0;
-  --shadow-color: rgba(0, 0, 0, 0.2);
-  --shadow-color-hover: rgba(0, 0, 0, 0.3);
-  --button-bg: #4a5568;
-  --button-color: #fff;
-  --button-hover-bg: #2d3748;
+  --bg-color: #0d0221;
+  --text-color: #90f1ef;
+  --selection-bg: #f2058f;
+  --selection-color: #0d0221;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-    'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Share Tech Mono', monospace;
   background-color: var(--bg-color);
   color: var(--text-color);
-  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s, color 0.3s;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-  background-color: var(--code-bg);
-  padding: 2px 4px;
-  border-radius: 4px;
-  color: var(--code-color);
-  transition: background-color 0.3s, color 0.3s;
+  font-family: 'Share Tech Mono', monospace;
 }
 
 #root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  animation: fadeIn 0.4s ease-in-out;
+  animation: fadeIn 1s ease-in;
 }
 
 @keyframes fadeIn {

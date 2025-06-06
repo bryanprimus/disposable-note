@@ -25,7 +25,7 @@ console.log("Hello, world!");
 > **Tip:** Use keyboard shortcuts like Ctrl+B for bold and Ctrl+I for italic.`
   );
   const [html, setHtml] = useState<string>('');
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
 
   useEffect(() => {
     const raw = marked.parse(markdown, { breaks: true });
@@ -46,7 +46,7 @@ console.log("Hello, world!");
             className="icon-button"
             title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
           >
-            {theme === 'light' ? '🌙' : '☀️'}
+            {theme === 'light' ? '☀️' : '🌙'}
           </button>
           <button onClick={() => setMarkdown('')} className="clear-btn">
             Clear All
@@ -73,7 +73,7 @@ console.log("Hello, world!");
 
       <footer className="footer">
         <p>
-          Disposable note—won’t be saved. <span className="heart">💛</span>
+          Disposable note—won't be saved. <span className="heart">💛</span>
         </p>
       </footer>
     </div>
