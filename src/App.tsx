@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import './App.css';
+import { ShareButton } from './components/ShareButton';
+import { SharedNote } from './pages/SharedNote';
 
-function App(): React.ReactElement {
+function HomePage(): React.ReactElement {
   const [markdown, setMarkdown] = useState<string>(
     `# Hello, Disposable Note! ✨
 
@@ -40,8 +43,13 @@ console.log("Hello, world!");
   return (
     <div className="app-container">
       <nav className="navbar">
-        <div className="logo">📝 Disposable Note</div>
+        <div className="logo">
+          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+            📝 Disposable Note
+          </Link>
+        </div>
         <div className="nav-controls">
+          <ShareButton content={markdown} />
           <button
             onClick={() => setIsExpanded((d) => !d)}
             className="icon-button"
@@ -85,6 +93,17 @@ console.log("Hello, world!");
         </p>
       </footer>
     </div>
+  );
+}
+
+function App(): React.ReactElement {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/share" element={<SharedNote />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
