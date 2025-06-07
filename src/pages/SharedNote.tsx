@@ -9,6 +9,7 @@ export const SharedNote: React.FC = () => {
   const [markdown, setMarkdown] = useState<string>('');
   const [html, setHtml] = useState<string>('');
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const [isPreviewOnly, setIsPreviewOnly] = useState<boolean>(true);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -37,6 +38,13 @@ export const SharedNote: React.FC = () => {
         <div className="logo">📝 Shared Note</div>
         <div className="nav-controls">
           <button
+            onClick={() => setIsPreviewOnly((p) => !p)}
+            className="icon-button"
+            title={isPreviewOnly ? 'Show editor' : 'Hide editor'}
+          >
+            {isPreviewOnly ? '✏️' : '📖'}
+          </button>
+          <button
             onClick={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
             className="icon-button"
             title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
@@ -46,7 +54,7 @@ export const SharedNote: React.FC = () => {
         </div>
       </nav>
 
-      <main className="main-content">
+      <main className={`main-content ${isPreviewOnly ? 'preview-focused' : ''}`}>
         <aside className="editor-area">
           <textarea
             value={markdown}

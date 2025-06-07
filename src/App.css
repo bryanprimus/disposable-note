@@ -179,6 +179,14 @@ body::after {
   display: none;
 }
 
+.main-content.preview-focused {
+  grid-template-columns: 1fr;
+}
+
+.main-content.preview-focused .editor-area {
+  display: none;
+}
+
 .editor-area,
 .preview-area {
   background: var(--panel-bg);
