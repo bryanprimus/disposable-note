@@ -383,6 +383,11 @@ body::after {
     gap: 1rem;
   }
 
+  .main-content.expanded,
+  .main-content.preview-focused {
+    grid-template-rows: 1fr;
+  }
+
   .editor-area,
   .preview-area {
     backdrop-filter: none; /* Can be heavy on mobile */
