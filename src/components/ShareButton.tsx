@@ -3,14 +3,18 @@ import { compressAndEncode } from '../utils/encoding';
 
 interface ShareButtonProps {
   content: string;
+  theme: 'light' | 'dark' | 'clean';
 }
 
-export const ShareButton: React.FC<ShareButtonProps> = ({ content }) => {
+export const ShareButton: React.FC<ShareButtonProps> = ({
+  content,
+  theme,
+}) => {
   const [showCopied, setShowCopied] = useState(false);
 
   const handleShare = async () => {
     const compressedContent = compressAndEncode(content);
-    const shareUrl = `${window.location.origin}/share?content=${compressedContent}`;
+    const shareUrl = `${window.location.origin}/share?content=${compressedContent}&theme=${theme}`;
 
     try {
       await navigator.clipboard.writeText(shareUrl);

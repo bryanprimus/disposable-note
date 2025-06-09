@@ -20,6 +20,13 @@
   --selection-color: #0d0221;
 }
 
+[data-theme='clean'] {
+  --bg-color: #f8f9fa;
+  --text-color: #212529;
+  --selection-bg: #0d6efd;
+  --selection-color: #ffffff;
+}
+
 body {
   font-family: 'Share Tech Mono', monospace;
   background-color: var(--bg-color);

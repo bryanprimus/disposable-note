@@ -5,15 +5,52 @@ import DOMPurify from 'dompurify';
 import { decompressAndDecode } from '../utils/encoding';
 
 export const SharedNote: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [markdown, setMarkdown] = useState<string>('');
   const [html, setHtml] = useState<string>('');
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+
+  const getInitialTheme = (): 'light' | 'dark' | 'clean' => {
+    const themeFromUrl = searchParams.get('theme');
+    if (
+      themeFromUrl === 'light' ||
+      themeFromUrl === 'dark' ||
+      themeFromUrl === 'clean'
+    ) {
+      return themeFromUrl;
+    }
+    return 'dark';
+  };
+
+  const [theme, setTheme] = useState<'light' | 'dark' | 'clean'>(
+    getInitialTheme()
+  );
   const [isPreviewOnly, setIsPreviewOnly] = useState<boolean>(true);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('theme', theme);
+    setSearchParams(newSearchParams, { replace: true });
+  }, [theme, searchParams, setSearchParams]);
+
+  const toggleTheme = () => {
+    const themes: Array<'light' | 'dark' | 'clean'> = ['dark', 'light', 'clean'];
+    const currentIndex = themes.indexOf(theme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    setTheme(themes[nextIndex]);
+  };
+
+  const getNextTheme = () => {
+    const themes: Array<'light' | 'dark' | 'clean'> = ['dark', 'light', 'clean'];
+    const currentIndex = themes.indexOf(theme);
+    return themes[(currentIndex + 1) % themes.length];
+  };
+
+  const getThemeIcon = () => {
+    if (theme === 'light') return '☀️';
+    if (theme === 'dark') return '🌙';
+    return '📄';
+  };
 
   useEffect(() => {
     const content = searchParams.get('content');
@@ -45,11 +82,11 @@ export const SharedNote: React.FC = () => {
             {isPreviewOnly ? '✏️' : '📖'}
           </button>
           <button
-            onClick={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
+            onClick={toggleTheme}
             className="icon-button"
-            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            title={`Switch to ${getNextTheme()} mode`}
           >
-            {theme === 'light' ? '☀️' : '🌙'}
+            {getThemeIcon()}
           </button>
         </div>
       </nav>
