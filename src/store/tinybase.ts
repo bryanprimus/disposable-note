@@ -91,7 +91,7 @@ export function useTinyBaseNote() {
       'note',
       'current',
       'content',
-      (_, __, ___, newCell) => {
+      (_store, _tableId, _rowId, _cellId, newCell) => {
         if (typeof newCell === 'string') {
           setContentState(newCell);
         }
