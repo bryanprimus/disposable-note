@@ -1,17 +1,21 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "disposable-note",
       "dependencies": {
         "@types/lz-string": "^1.5.0",
         "@types/react-router-dom": "^5.3.3",
+        "dexie": "^4.4.6",
+        "dexie-react-hooks": "^4.4.0",
         "dompurify": "^3.0.6",
         "lz-string": "1.5.0",
         "marked": "^9.1.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^7.6.2",
+        "tinybase": "^9.7.1",
       },
       "devDependencies": {
         "@types/dompurify": "^3.2.0",
@@ -157,6 +161,10 @@
 
     "debug": ["debug@4.4.0", "", { "dependencies": { "ms": "^2.1.3" } }, "sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA=="],
 
+    "dexie": ["dexie@4.4.6", "", {}, "sha512-hJP/BO6mjB+tX6hToIO1kmxYLNmun90wYbfcoAoLpKEyDYal/k33dg0TAfoUe2TDsbbLoVIzljJ3BN2UbR5EOg=="],
+
+    "dexie-react-hooks": ["dexie-react-hooks@4.4.0", "", { "peerDependencies": { "dexie": ">=4.2.0-alpha.1 <5.0.0", "react": ">=16" } }, "sha512-ObLXBS5+4BJU8vtSvBx6b9fY6zZYgniAtwxzjCHsUQadgbqYN6935X2/1TWw4Rf2N1aZV1io5/ziox4vKuxABA=="],
+
     "dompurify": ["dompurify@3.2.4", "", { "optionalDependencies": { "@types/trusted-types": "^2.0.7" } }, "sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg=="],
 
     "electron-to-chromium": ["electron-to-chromium@1.5.123", "", {}, "sha512-refir3NlutEZqlKaBLK0tzlVLe5P2wDKS7UQt/3SpibizgsRAPOsqQC3ffw1nlv3ze5gjRQZYHoPymgVZkplFA=="],
@@ -214,6 +222,8 @@
     "set-cookie-parser": ["set-cookie-parser@2.7.1", "", {}, "sha512-IOc8uWeOZgnb3ptbCURJWNjWUPcO3ZnTTdzsurqERrP6nPyv+paC55vJM0LpOlT2ne+Ix+9+CRG1MNLlyZ4GjQ=="],
 
     "source-map-js": ["source-map-js@1.2.1", "", {}, "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA=="],
+
+    "tinybase": ["tinybase@9.7.1", "", { "peerDependencies": { "@automerge/automerge-repo": "^2.5.6", "@capacitor-community/sqlite": "^8.1.1", "@cloudflare/workers-types": "^5.20260902.1", "@electric-sql/pglite": "^0.5.8", "@libsql/client": "^0.17.4", "@powersync/common": "^2.2.0", "@sinclair/typebox": "^0.34.52", "@sqlite.org/sqlite-wasm": "^3.53.0-build1", "@supabase/supabase-js": "^2.114.0", "@vlcn.io/crsqlite-wasm": "^0.16.0", "arktype": "^2.2.3", "better-sqlite3": "^13.0.3", "bun": "^1.4.0", "effect": "^3.22.1", "electric-sql": "^0.12.1", "expo": "^57.0.19", "expo-sqlite": "^57.0.2", "partykit": "^0.0.115", "partysocket": "^1.3.0", "pg": "^8.23.0", "postgres": "^3.4.9", "react": "^19.2.8", "react-dom": "^19.2.8", "react-native-mmkv": "^4.3.2", "react-native-sqlite-storage": "^6.0.1", "solid-js": "^1.9.15", "sqlite3": "^6.0.1", "svelte": "^5.57.0", "valibot": "^1.4.2", "ws": "^8.21.3", "yjs": "^13.6.32", "zod": "^4.5.4" }, "optionalPeers": ["@automerge/automerge-repo", "@capacitor-community/sqlite", "@cloudflare/workers-types", "@electric-sql/pglite", "@libsql/client", "@powersync/common", "@sinclair/typebox", "@sqlite.org/sqlite-wasm", "@supabase/supabase-js", "@vlcn.io/crsqlite-wasm", "arktype", "better-sqlite3", "bun", "effect", "electric-sql", "expo", "expo-sqlite", "partykit", "partysocket", "pg", "postgres", "react", "react-dom", "react-native-mmkv", "react-native-sqlite-storage", "solid-js", "sqlite3", "svelte", "valibot", "ws", "yjs", "zod"] }, "sha512-aeMJwboqSxXXlW93fET4x1K8IBeePzQskKlSrVAZM86E58jCT6gAYi2cW0fin1VpPQoE+dluJawP6RitgjaNUg=="],
 
     "typescript": ["typescript@5.8.2", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ=="],
 

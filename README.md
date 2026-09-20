@@ -4,11 +4,13 @@ A simple web application for writing quick, disposable notes with Markdown suppo
 
 ## Features
 
-- Side-by-side Markdown editor and preview
-- Real-time preview as you type
-- Support for all standard Markdown syntax
-- Clean, responsive design
-- No data persistence - notes are truly disposable
+- **Side-by-side Markdown editor and preview** with real-time live render
+- **Ephemeral Active Scratchpad (TinyBase):** Reactive in-memory store with `sessionStorage` crash protection (survives reload, self-destructs when tab closes)
+- **Local Shelf (Dexie.js):** Save notes to your local machine via IndexedDB with zero cloud servers
+- **Full Undo / Redo:** Built-in multi-step history checkpoints (`Cmd+Z` / `Cmd+Shift+Z`)
+- **Transparent Storage Indicator:** Subtle UI badge showing exact physical disk path (`~/Library/.../IndexedDB`) and 1-click "Nuke All" privacy purge
+- **Instant URL Compression Sharing:** Stateless snapshot links powered by `lz-string`
+- **Dark & Light Mode:** Automatic system preference detection with manual toggle
 
 ## Getting Started
 
@@ -61,10 +63,13 @@ yarn build
 
 ## Technologies Used
 
-- React.js
+- React.js 18
 - Vite (build tool)
+- [TinyBase](https://tinybase.org) (Reactive in-memory store & session persister)
+- [Dexie.js](https://dexie.org) (IndexedDB wrapper for local-first storage)
 - marked (Markdown parser)
 - DOMPurify (HTML sanitizer)
+- lz-string (URL snapshot compression)
 
 ## License
 

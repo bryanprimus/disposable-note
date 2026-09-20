@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -8,9 +8,14 @@ import {
 } from 'react-router-dom';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
+import { useLiveQuery } from 'dexie-react-hooks';
 import './App.css';
 import { ShareButton } from './components/ShareButton';
 import { SharedNote } from './pages/SharedNote';
+import { StorageStatusModal } from './components/StorageStatusModal';
+import { LocalShelfDrawer } from './components/LocalShelfDrawer';
+import { useTinyBaseNote } from './store/tinybase';
+import { db, saveToShelf, clearShelf } from './db/dexie';
 import {
   IconFileText,
   IconSun,
@@ -18,32 +23,33 @@ import {
   IconExpand,
   IconColumns,
   IconTrash,
+  IconArchive,
+  IconUndo,
+  IconRedo,
 } from './components/Icons';
 
 function HomePage(): React.ReactElement {
-  const [markdown, setMarkdown] = useState<string>(
-    `# Hello, Disposable Note! ✨
+  const {
+    content: markdown,
+    setContent: setMarkdown,
+    canUndo,
+    canRedo,
+    undo,
+    redo,
+    clearNote,
+    loadNote,
+  } = useTinyBaseNote();
 
-Start typing your markdown here. This note is disposable and will not be saved when you close the browser.
-
-## Features
-
-- **Bold** and *italic* text
-- Lists and checkboxes
-  - [ ] Todo item
-  - [x] Completed item
-- [Links](https://example.com)
-- Code blocks
-
-\`\`\`js
-console.log("Hello, world!");
-\`\`\`
-
-> **Tip:** Use keyboard shortcuts like Ctrl+B for bold and Ctrl+I for italic.`
-  );
   const [html, setHtml] = useState<string>('');
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileTab, setMobileTab] = useState<'editor' | 'preview'>('editor');
+  const [isShelfOpen, setIsShelfOpen] = useState<boolean>(false);
+  const [isStorageModalOpen, setIsStorageModalOpen] = useState<boolean>(false);
+  const [saveStatus, setSaveStatus] = useState<string | null>(null);
+
+  // Live query for Dexie saved notes count
+  const savedNotes = useLiveQuery(() => db.notes.toArray());
+  const savedNotesCount = savedNotes ? savedNotes.length : 0;
 
   const getInitialTheme = (): 'light' | 'dark' => {
     const themeFromUrl = searchParams.get('theme');
@@ -95,6 +101,47 @@ console.log("Hello, world!");
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
+  const handleSaveToShelf = useCallback(async () => {
+    if (!markdown.trim()) return;
+    try {
+      await saveToShelf(markdown);
+      setSaveStatus('Saved!');
+      setTimeout(() => setSaveStatus(null), 2000);
+    } catch (err) {
+      console.error('Failed to save note to shelf:', err);
+      setSaveStatus('Error');
+      setTimeout(() => setSaveStatus(null), 2000);
+    }
+  }, [markdown]);
+
+  // Keyboard shortcut: Cmd+S or Ctrl+S to save to shelf
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        handleSaveToShelf();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleSaveToShelf]);
+
+  const handleNukeAll = async () => {
+    if (
+      window.confirm(
+        'Nuke all local storage? This will reset your active session draft and wipe all notes from IndexedDB.'
+      )
+    ) {
+      clearNote();
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        window.sessionStorage.removeItem('disposable_note_session');
+      }
+      await clearShelf();
+      setIsStorageModalOpen(false);
+      alert('All local storage wiped cleanly.');
+    }
+  };
+
   const wordCount = markdown.trim() ? markdown.trim().split(/\s+/).length : 0;
   const charCount = markdown.length;
 
@@ -109,6 +156,17 @@ console.log("Hello, world!");
             <span className="logo-text">Disposable Note</span>
           </Link>
           <span className="badge">ephemeral</span>
+
+          {/* Subtle Storage Status Pill */}
+          <button
+            type="button"
+            className="storage-pill"
+            onClick={() => setIsStorageModalOpen(true)}
+            title="Click to view storage architecture & disk location"
+          >
+            <span className="storage-pill-dot" />
+            <span>RAM (TinyBase)</span>
+          </button>
         </div>
 
         <div className="nav-controls">
@@ -129,10 +187,59 @@ console.log("Hello, world!");
             </button>
           </div>
 
+          {/* Undo / Redo Checkpoints */}
           <button
-            onClick={() => setMarkdown('')}
+            onClick={undo}
+            disabled={!canUndo}
+            className="btn btn-secondary btn-icon"
+            title="Undo (Cmd+Z)"
+            type="button"
+          >
+            <IconUndo size={14} />
+          </button>
+
+          <button
+            onClick={redo}
+            disabled={!canRedo}
+            className="btn btn-secondary btn-icon"
+            title="Redo (Cmd+Shift+Z)"
+            type="button"
+          >
+            <IconRedo size={14} />
+          </button>
+
+          <div className="nav-divider" />
+
+          {/* Dexie Shelf Controls */}
+          <button
+            onClick={handleSaveToShelf}
+            className={`btn ${saveStatus ? 'btn-success' : 'btn-secondary'}`}
+            title="Save note to local IndexedDB shelf (Cmd+S)"
+            type="button"
+          >
+            <IconArchive size={14} />
+            <span>{saveStatus || 'Save to Shelf'}</span>
+          </button>
+
+          <button
+            onClick={() => setIsShelfOpen(true)}
+            className="btn btn-secondary"
+            title="Open local saved notes shelf"
+            type="button"
+          >
+            <IconArchive size={14} />
+            <span>Shelf</span>
+            {savedNotesCount > 0 && (
+              <span className="pill-count">{savedNotesCount}</span>
+            )}
+          </button>
+
+          <div className="nav-divider" />
+
+          <button
+            onClick={clearNote}
             className="btn btn-danger"
-            title="Clear all text"
+            title="Clear active note"
             type="button"
           >
             <IconTrash size={14} />
@@ -172,7 +279,7 @@ console.log("Hello, world!");
           <div className="panel-header">
             <span className="panel-header-title">Markdown</span>
             <span className="panel-header-meta">
-              {wordCount} words · {charCount} chars
+              {wordCount} words · {charCount} chars · Session auto-saved (RAM)
             </span>
           </div>
           <div className="editor-body">
@@ -201,9 +308,45 @@ console.log("Hello, world!");
       </main>
 
       <footer className="footer">
-        <span>Disposable Note — no login, no database, self-destructs on close</span>
-        <span className="footer-details">Privacy by design</span>
+        <button
+          type="button"
+          className="footer-storage-link"
+          onClick={() => setIsStorageModalOpen(true)}
+          title="Click to view storage architecture & disk path"
+        >
+          <span className="footer-dot" />
+          <span>
+            Active: <strong>RAM (TinyBase)</strong>
+          </span>
+          <span className="footer-sep">·</span>
+          <span>
+            Shelf: <strong>IndexedDB (Dexie)</strong>
+          </span>
+          <span className="footer-sep">·</span>
+          <span className="footer-path-hint">Local on Mac ↗</span>
+        </button>
+        <span className="footer-details">Zero cloud servers · 100% private</span>
       </footer>
+
+      {/* Local Shelf Drawer (Dexie IndexedDB) */}
+      <LocalShelfDrawer
+        isOpen={isShelfOpen}
+        onClose={() => setIsShelfOpen(false)}
+        onSelectNote={(noteContent) => loadNote(noteContent)}
+        onNewNote={() => clearNote()}
+        onOpenStorageModal={() => {
+          setIsShelfOpen(false);
+          setIsStorageModalOpen(true);
+        }}
+      />
+
+      {/* Storage Architecture & Location Modal */}
+      <StorageStatusModal
+        isOpen={isStorageModalOpen}
+        onClose={() => setIsStorageModalOpen(false)}
+        savedNotesCount={savedNotesCount}
+        onNukeAll={handleNukeAll}
+      />
     </div>
   );
 }
