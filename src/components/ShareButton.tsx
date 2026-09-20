@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { compressAndEncode } from '../utils/encoding';
+import { IconShare, IconCheck } from './Icons';
 
 interface ShareButtonProps {
   content: string;
-  theme: 'light' | 'dark' | 'clean';
+  theme: 'light' | 'dark';
 }
 
 export const ShareButton: React.FC<ShareButtonProps> = ({
@@ -28,10 +29,12 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
   return (
     <button
       onClick={handleShare}
-      className="icon-button"
-      title="Share note"
+      className={`btn ${showCopied ? 'btn-success' : 'btn-primary'}`}
+      title={showCopied ? 'Link copied to clipboard!' : 'Copy shareable link'}
+      type="button"
     >
-      {showCopied ? '✓' : '🔗'}
+      {showCopied ? <IconCheck size={14} /> : <IconShare size={14} />}
+      <span>{showCopied ? 'Copied' : 'Share'}</span>
     </button>
   );
-}; 
+};

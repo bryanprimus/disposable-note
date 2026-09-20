@@ -11,6 +11,14 @@ import DOMPurify from 'dompurify';
 import './App.css';
 import { ShareButton } from './components/ShareButton';
 import { SharedNote } from './pages/SharedNote';
+import {
+  IconFileText,
+  IconSun,
+  IconMoon,
+  IconExpand,
+  IconColumns,
+  IconTrash,
+} from './components/Icons';
 
 function HomePage(): React.ReactElement {
   const [markdown, setMarkdown] = useState<string>(
@@ -35,27 +43,22 @@ console.log("Hello, world!");
   );
   const [html, setHtml] = useState<string>('');
   const [searchParams, setSearchParams] = useSearchParams();
+  const [mobileTab, setMobileTab] = useState<'editor' | 'preview'>('editor');
 
-  const getInitialTheme = (): 'light' | 'dark' | 'clean' => {
+  const getInitialTheme = (): 'light' | 'dark' => {
     const themeFromUrl = searchParams.get('theme');
-    if (
-      themeFromUrl === 'light' ||
-      themeFromUrl === 'dark' ||
-      themeFromUrl === 'clean'
-    ) {
+    if (themeFromUrl === 'light' || themeFromUrl === 'dark') {
       return themeFromUrl;
     }
     return 'dark';
   };
 
-  const [theme, setTheme] = useState<'light' | 'dark' | 'clean'>(
-    getInitialTheme()
-  );
+  const [theme, setTheme] = useState<'light' | 'dark'>(getInitialTheme());
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   useEffect(() => {
     const raw = marked.parse(markdown, { breaks: true });
-    setHtml(DOMPurify.sanitize(raw));
+    setHtml(DOMPurify.sanitize(raw as string));
   }, [markdown]);
 
   useEffect(() => {
@@ -66,75 +69,117 @@ console.log("Hello, world!");
   }, [theme, searchParams, setSearchParams]);
 
   const toggleTheme = () => {
-    const themes: Array<'light' | 'dark' | 'clean'> = ['dark', 'light', 'clean'];
-    const currentIndex = themes.indexOf(theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    setTheme(themes[nextIndex]);
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
-  const getNextTheme = () => {
-    const themes: Array<'light' | 'dark' | 'clean'> = ['dark', 'light', 'clean'];
-    const currentIndex = themes.indexOf(theme);
-    return themes[(currentIndex + 1) % themes.length];
-  }
-
-  const getThemeIcon = () => {
-    if (theme === 'light') return '☀️';
-    if (theme === 'dark') return '🌙';
-    return '📄';
-  }
+  const wordCount = markdown.trim() ? markdown.trim().split(/\s+/).length : 0;
+  const charCount = markdown.length;
 
   return (
     <div className="app-container">
       <nav className="navbar">
-        <div className="logo">
-          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-            📝 Disposable Note
+        <div className="logo-container">
+          <Link to="/" className="logo-link">
+            <span className="logo-icon">
+              <IconFileText size={16} />
+            </span>
+            <span className="logo-text">Disposable Note</span>
           </Link>
+          <span className="badge">ephemeral</span>
         </div>
+
         <div className="nav-controls">
-          <ShareButton content={markdown} theme={theme} />
+          <div className="mobile-view-tabs">
+            <button
+              type="button"
+              className={`mobile-tab-btn ${mobileTab === 'editor' ? 'active' : ''}`}
+              onClick={() => setMobileTab('editor')}
+            >
+              Write
+            </button>
+            <button
+              type="button"
+              className={`mobile-tab-btn ${mobileTab === 'preview' ? 'active' : ''}`}
+              onClick={() => setMobileTab('preview')}
+            >
+              Preview
+            </button>
+          </div>
+
           <button
-            onClick={() => setIsExpanded((d) => !d)}
-            className="icon-button"
-            title={isExpanded ? 'Collapse editor' : 'Expand editor'}
+            onClick={() => setMarkdown('')}
+            className="btn btn-danger"
+            title="Clear all text"
+            type="button"
           >
-            {isExpanded ? '↩️' : '↔️'}
+            <IconTrash size={14} />
+            <span>Clear</span>
           </button>
+
+          <button
+            onClick={() => setIsExpanded((prev) => !prev)}
+            className="btn btn-secondary btn-icon"
+            title={isExpanded ? 'Split view' : 'Focus editor'}
+            type="button"
+          >
+            {isExpanded ? <IconColumns size={14} /> : <IconExpand size={14} />}
+          </button>
+
           <button
             onClick={toggleTheme}
-            className="icon-button"
-            title={`Switch to ${getNextTheme()} mode`}
+            className="btn btn-secondary btn-icon"
+            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            type="button"
           >
-            {getThemeIcon()}
+            {theme === 'dark' ? <IconSun size={14} /> : <IconMoon size={14} />}
           </button>
-          <button onClick={() => setMarkdown('')} className="clear-btn">
-            Clear All
-          </button>
+
+          <div className="nav-divider" />
+
+          <ShareButton content={markdown} theme={theme} />
         </div>
       </nav>
 
-      <main className={`main-content ${isExpanded ? 'expanded' : ''}`}>
-        <aside className="editor-area">
-          <textarea
-            value={markdown}
-            onChange={(e) => setMarkdown(e.target.value)}
-            placeholder="Write your markdown..."
-          />
-        </aside>
+      <main
+        className={`main-content ${isExpanded ? 'expanded' : ''} ${
+          mobileTab === 'editor' ? 'mobile-show-editor' : 'mobile-show-preview'
+        }`}
+      >
+        <section className="editor-panel">
+          <div className="panel-header">
+            <span className="panel-header-title">Markdown</span>
+            <span className="panel-header-meta">
+              {wordCount} words · {charCount} chars
+            </span>
+          </div>
+          <div className="editor-body">
+            <textarea
+              className="editor-textarea"
+              value={markdown}
+              onChange={(e) => setMarkdown(e.target.value)}
+              placeholder="Write your markdown..."
+              spellCheck={false}
+            />
+          </div>
+        </section>
 
-        <section className="preview-area">
-          <div
-            className="preview-content"
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
+        <section className="preview-panel">
+          <div className="panel-header">
+            <span className="panel-header-title">Preview</span>
+            <span className="panel-header-meta">Live render</span>
+          </div>
+          <div className="preview-body">
+            <div
+              className="preview-content"
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+          </div>
         </section>
       </main>
 
       <footer className="footer">
-        <p>
-          Disposable note—won't be saved. <span className="heart">💛</span>
-        </p>
+        <span>Disposable Note — no login, no database, self-destructs on close</span>
+        <span className="footer-details">Privacy by design</span>
       </footer>
     </div>
   );
