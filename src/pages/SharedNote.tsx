@@ -24,6 +24,13 @@ export const SharedNote: React.FC = () => {
     if (themeFromUrl === 'light' || themeFromUrl === 'dark') {
       return themeFromUrl;
     }
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: light)').matches
+    ) {
+      return 'light';
+    }
     return 'dark';
   };
 

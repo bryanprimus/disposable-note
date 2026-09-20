@@ -50,10 +50,18 @@ console.log("Hello, world!");
     if (themeFromUrl === 'light' || themeFromUrl === 'dark') {
       return themeFromUrl;
     }
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: light)').matches
+    ) {
+      return 'light';
+    }
     return 'dark';
   };
 
   const [theme, setTheme] = useState<'light' | 'dark'>(getInitialTheme());
+  const [hasUserToggledTheme, setHasUserToggledTheme] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   useEffect(() => {
@@ -63,12 +71,27 @@ console.log("Hello, world!");
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('theme', theme);
-    setSearchParams(newSearchParams, { replace: true });
-  }, [theme, searchParams, setSearchParams]);
+    if (hasUserToggledTheme || searchParams.has('theme')) {
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.set('theme', theme);
+      setSearchParams(newSearchParams, { replace: true });
+    }
+  }, [theme, hasUserToggledTheme, searchParams, setSearchParams]);
+
+  useEffect(() => {
+    if (searchParams.has('theme') || hasUserToggledTheme) return;
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      setTheme(e.matches ? 'light' : 'dark');
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [searchParams, hasUserToggledTheme]);
 
   const toggleTheme = () => {
+    setHasUserToggledTheme(true);
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
