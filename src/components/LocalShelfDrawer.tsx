@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db, type SavedNote, deleteFromShelf, clearShelf, detectBrowserStorageLocation } from '../db/dexie';
+import { db, type SavedNote, deleteFromShelf, clearShelf } from '../db/dexie';
 import {
   IconArchive,
   IconX,
@@ -16,7 +16,6 @@ interface LocalShelfDrawerProps {
   onClose: () => void;
   onSelectNote: (content: string) => void;
   onNewNote: () => void;
-  onOpenStorageModal: () => void;
 }
 
 export const LocalShelfDrawer: React.FC<LocalShelfDrawerProps> = ({
@@ -24,10 +23,8 @@ export const LocalShelfDrawer: React.FC<LocalShelfDrawerProps> = ({
   onClose,
   onSelectNote,
   onNewNote,
-  onOpenStorageModal,
 }) => {
   const notes = useLiveQuery(() => db.notes.orderBy('updatedAt').reverse().toArray());
-  const browserInfo = detectBrowserStorageLocation();
 
   if (!isOpen) return null;
 
@@ -55,7 +52,7 @@ export const LocalShelfDrawer: React.FC<LocalShelfDrawerProps> = ({
         className="drawer-panel"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
-        aria-label="Local Notes Shelf"
+        aria-label="Saved notes"
       >
         <div className="drawer-header">
           <div className="drawer-title-wrap">
@@ -63,9 +60,9 @@ export const LocalShelfDrawer: React.FC<LocalShelfDrawerProps> = ({
               <IconArchive size={17} />
             </span>
             <div className="drawer-titles">
-              <h2 className="drawer-title">Local Shelf</h2>
+              <h2 className="drawer-title">Saved notes</h2>
               <span className="drawer-subtitle">
-                {notes ? notes.length : 0} notes · Dexie IndexedDB
+                {notes ? notes.length : 0} {notes?.length === 1 ? 'note' : 'notes'}
               </span>
             </div>
           </div>
@@ -74,7 +71,7 @@ export const LocalShelfDrawer: React.FC<LocalShelfDrawerProps> = ({
               type="button"
               className="btn btn-secondary btn-icon"
               onClick={onClose}
-              aria-label="Close shelf"
+              aria-label="Close saved notes"
             >
               <IconX size={15} />
             </button>
@@ -93,14 +90,6 @@ export const LocalShelfDrawer: React.FC<LocalShelfDrawerProps> = ({
             <IconPlus size={13} />
             <span>New Note</span>
           </button>
-          <button
-            type="button"
-            className="drawer-subtle-storage-link"
-            onClick={onOpenStorageModal}
-            title="Click to see where notes are stored on disk"
-          >
-            IndexedDB on Mac ↗
-          </button>
         </div>
 
         <div className="drawer-body">
@@ -109,9 +98,9 @@ export const LocalShelfDrawer: React.FC<LocalShelfDrawerProps> = ({
               <span className="drawer-empty-icon">
                 <IconFileText size={28} />
               </span>
-              <h3>No saved notes on your shelf</h3>
+              <h3>No saved notes yet</h3>
               <p>
-                Write something in the editor and click <strong>"Save to Shelf"</strong> to persist it locally on this Mac.
+                Write something and click <strong>Save</strong> to keep it.
               </p>
             </div>
           ) : (
@@ -134,7 +123,7 @@ export const LocalShelfDrawer: React.FC<LocalShelfDrawerProps> = ({
                       type="button"
                       className="btn btn-ghost btn-icon"
                       onClick={() => handleShare(note)}
-                      title="Copy compressed share link"
+                      title="Copy share link"
                     >
                       <IconShare size={13} />
                     </button>
@@ -142,7 +131,7 @@ export const LocalShelfDrawer: React.FC<LocalShelfDrawerProps> = ({
                       type="button"
                       className="btn btn-ghost btn-icon text-danger"
                       onClick={() => deleteFromShelf(note.id)}
-                      title="Delete from shelf"
+                      title="Delete note"
                     >
                       <IconTrash size={13} />
                     </button>
@@ -153,26 +142,22 @@ export const LocalShelfDrawer: React.FC<LocalShelfDrawerProps> = ({
           )}
         </div>
 
-        <div className="drawer-footer">
-          <div className="drawer-path-hint">
-            <span className="hint-label">Stored on disk at:</span>
-            <code className="hint-code">{browserInfo.diskPath}</code>
-          </div>
-          {notes && notes.length > 0 && (
+        {notes && notes.length > 0 && (
+          <div className="drawer-footer">
             <button
               type="button"
               className="btn btn-danger btn-sm"
               onClick={() => {
-                if (window.confirm('Delete all notes from your local IndexedDB shelf?')) {
+                if (window.confirm('Delete all saved notes?')) {
                   clearShelf();
                 }
               }}
             >
               <IconTrash size={13} />
-              <span>Clear Shelf</span>
+              <span>Clear all</span>
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </aside>
     </div>
   );

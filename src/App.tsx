@@ -12,10 +12,9 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import './App.css';
 import { ShareButton } from './components/ShareButton';
 import { SharedNote } from './pages/SharedNote';
-import { StorageStatusModal } from './components/StorageStatusModal';
 import { LocalShelfDrawer } from './components/LocalShelfDrawer';
 import { useTinyBaseNote } from './store/tinybase';
-import { db, saveToShelf, clearShelf } from './db/dexie';
+import { db, saveToShelf } from './db/dexie';
 import {
   IconFileText,
   IconSun,
@@ -44,10 +43,8 @@ function HomePage(): React.ReactElement {
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileTab, setMobileTab] = useState<'editor' | 'preview'>('editor');
   const [isShelfOpen, setIsShelfOpen] = useState<boolean>(false);
-  const [isStorageModalOpen, setIsStorageModalOpen] = useState<boolean>(false);
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
 
-  // Live query for Dexie saved notes count
   const savedNotes = useLiveQuery(() => db.notes.toArray());
   const savedNotesCount = savedNotes ? savedNotes.length : 0;
 
@@ -126,22 +123,6 @@ function HomePage(): React.ReactElement {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleSaveToShelf]);
 
-  const handleNukeAll = async () => {
-    if (
-      window.confirm(
-        'Nuke all local storage? This will reset your active session draft and wipe all notes from IndexedDB.'
-      )
-    ) {
-      clearNote();
-      if (typeof window !== 'undefined' && window.sessionStorage) {
-        window.sessionStorage.removeItem('disposable_note_session');
-      }
-      await clearShelf();
-      setIsStorageModalOpen(false);
-      alert('All local storage wiped cleanly.');
-    }
-  };
-
   const wordCount = markdown.trim() ? markdown.trim().split(/\s+/).length : 0;
   const charCount = markdown.length;
 
@@ -156,17 +137,6 @@ function HomePage(): React.ReactElement {
             <span className="logo-text">Disposable Note</span>
           </Link>
           <span className="badge">ephemeral</span>
-
-          {/* Subtle Storage Status Pill */}
-          <button
-            type="button"
-            className="storage-pill"
-            onClick={() => setIsStorageModalOpen(true)}
-            title="Click to view storage architecture & disk location"
-          >
-            <span className="storage-pill-dot" />
-            <span>RAM (TinyBase)</span>
-          </button>
         </div>
 
         <div className="nav-controls">
@@ -210,21 +180,20 @@ function HomePage(): React.ReactElement {
 
           <div className="nav-divider" />
 
-          {/* Dexie Shelf Controls */}
           <button
             onClick={handleSaveToShelf}
             className={`btn ${saveStatus ? 'btn-success' : 'btn-secondary'}`}
-            title="Save note to local IndexedDB shelf (Cmd+S)"
+            title="Save note (Cmd+S)"
             type="button"
           >
             <IconArchive size={14} />
-            <span>{saveStatus || 'Save to Shelf'}</span>
+            <span>{saveStatus || 'Save'}</span>
           </button>
 
           <button
             onClick={() => setIsShelfOpen(true)}
             className="btn btn-secondary"
-            title="Open local saved notes shelf"
+            title="Open saved notes"
             type="button"
           >
             <IconArchive size={14} />
@@ -279,7 +248,7 @@ function HomePage(): React.ReactElement {
           <div className="panel-header">
             <span className="panel-header-title">Markdown</span>
             <span className="panel-header-meta">
-              {wordCount} words · {charCount} chars · Session auto-saved (RAM)
+              {wordCount} words · {charCount} chars
             </span>
           </div>
           <div className="editor-body">
@@ -308,44 +277,15 @@ function HomePage(): React.ReactElement {
       </main>
 
       <footer className="footer">
-        <button
-          type="button"
-          className="footer-storage-link"
-          onClick={() => setIsStorageModalOpen(true)}
-          title="Click to view storage architecture & disk path"
-        >
-          <span className="footer-dot" />
-          <span>
-            Active: <strong>RAM (TinyBase)</strong>
-          </span>
-          <span className="footer-sep">·</span>
-          <span>
-            Shelf: <strong>IndexedDB (Dexie)</strong>
-          </span>
-          <span className="footer-sep">·</span>
-          <span className="footer-path-hint">Local on Mac ↗</span>
-        </button>
-        <span className="footer-details">Zero cloud servers · 100% private</span>
+        <span>Disposable Note</span>
+        <span className="footer-details">Notes stay on this device</span>
       </footer>
 
-      {/* Local Shelf Drawer (Dexie IndexedDB) */}
       <LocalShelfDrawer
         isOpen={isShelfOpen}
         onClose={() => setIsShelfOpen(false)}
         onSelectNote={(noteContent) => loadNote(noteContent)}
         onNewNote={() => clearNote()}
-        onOpenStorageModal={() => {
-          setIsShelfOpen(false);
-          setIsStorageModalOpen(true);
-        }}
-      />
-
-      {/* Storage Architecture & Location Modal */}
-      <StorageStatusModal
-        isOpen={isStorageModalOpen}
-        onClose={() => setIsStorageModalOpen(false)}
-        savedNotesCount={savedNotesCount}
-        onNukeAll={handleNukeAll}
       />
     </div>
   );

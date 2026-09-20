@@ -126,7 +126,7 @@ export const SharedNote: React.FC = () => {
       <div className="shared-banner">
         <div className="shared-banner-text">
           <span>
-            Viewing shared snapshot. Edits you make here are local to your browser.
+            You're viewing a shared note. Edits stay on this device.
           </span>
         </div>
         {!isError && <ShareButton content={markdown} theme={theme} />}
@@ -166,8 +166,8 @@ export const SharedNote: React.FC = () => {
       </main>
 
       <footer className="footer">
-        <span>Disposable Note — shared snapshot</span>
-        <span className="footer-details">Ephemeral</span>
+        <span>Disposable Note</span>
+        <span className="footer-details">Shared note</span>
       </footer>
     </div>
   );
