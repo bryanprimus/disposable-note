@@ -25,6 +25,7 @@ import {
   IconArchive,
   IconUndo,
   IconRedo,
+  IconEye,
 } from './components/Icons';
 
 function HomePage(): React.ReactElement {
@@ -65,7 +66,17 @@ function HomePage(): React.ReactElement {
 
   const [theme, setTheme] = useState<'light' | 'dark'>(getInitialTheme());
   const [hasUserToggledTheme, setHasUserToggledTheme] = useState<boolean>(false);
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<'split' | 'editor' | 'preview'>('split');
+
+  const handleToggleEditor = useCallback(() => {
+    setViewMode((prev) => (prev === 'editor' ? 'split' : 'editor'));
+    setMobileTab('editor');
+  }, []);
+
+  const handleTogglePreview = useCallback(() => {
+    setViewMode((prev) => (prev === 'preview' ? 'split' : 'preview'));
+    setMobileTab('preview');
+  }, []);
 
   useEffect(() => {
     const raw = marked.parse(markdown, { breaks: true });
@@ -111,17 +122,19 @@ function HomePage(): React.ReactElement {
     }
   }, [markdown]);
 
-  // Keyboard shortcut: Cmd+S or Ctrl+S to save to shelf
+  // Keyboard shortcut: Cmd+S or Ctrl+S to save to shelf, Escape to restore split view
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
         e.preventDefault();
         handleSaveToShelf();
+      } else if (e.key === 'Escape' && viewMode !== 'split') {
+        setViewMode('split');
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleSaveToShelf]);
+  }, [handleSaveToShelf, viewMode]);
 
   const wordCount = markdown.trim() ? markdown.trim().split(/\s+/).length : 0;
   const charCount = markdown.length;
@@ -216,12 +229,23 @@ function HomePage(): React.ReactElement {
           </button>
 
           <button
-            onClick={() => setIsExpanded((prev) => !prev)}
-            className="btn btn-secondary btn-icon"
-            title={isExpanded ? 'Split view' : 'Focus editor'}
+            onClick={handleToggleEditor}
+            className={`btn btn-secondary btn-icon nav-view-btn ${viewMode === 'editor' ? 'active' : ''}`}
+            title={viewMode === 'editor' ? 'Split view' : 'Focus editor'}
+            aria-label={viewMode === 'editor' ? 'Split view' : 'Focus editor'}
             type="button"
           >
-            {isExpanded ? <IconColumns size={14} /> : <IconExpand size={14} />}
+            {viewMode === 'editor' ? <IconColumns size={14} /> : <IconExpand size={14} />}
+          </button>
+
+          <button
+            onClick={handleTogglePreview}
+            className={`btn btn-secondary btn-icon nav-view-btn ${viewMode === 'preview' ? 'active' : ''}`}
+            title={viewMode === 'preview' ? 'Split view' : 'Focus preview'}
+            aria-label={viewMode === 'preview' ? 'Split view' : 'Focus preview'}
+            type="button"
+          >
+            {viewMode === 'preview' ? <IconColumns size={14} /> : <IconEye size={14} />}
           </button>
 
           <button
@@ -240,16 +264,33 @@ function HomePage(): React.ReactElement {
       </nav>
 
       <main
-        className={`main-content ${isExpanded ? 'expanded' : ''} ${
+        className={`main-content ${
+          viewMode === 'editor'
+            ? 'expanded'
+            : viewMode === 'preview'
+            ? 'preview-focused'
+            : ''
+        } ${
           mobileTab === 'editor' ? 'mobile-show-editor' : 'mobile-show-preview'
         }`}
       >
         <section className="editor-panel">
           <div className="panel-header">
             <span className="panel-header-title">Markdown</span>
-            <span className="panel-header-meta">
-              {wordCount} words · {charCount} chars
-            </span>
+            <div className="panel-header-actions">
+              <span className="panel-header-meta">
+                {wordCount} words · {charCount} chars
+              </span>
+              <button
+                type="button"
+                className="panel-header-btn"
+                onClick={handleToggleEditor}
+                title={viewMode === 'editor' ? 'Restore split view' : 'Full screen editor'}
+                aria-label={viewMode === 'editor' ? 'Restore split view' : 'Full screen editor'}
+              >
+                {viewMode === 'editor' ? <IconColumns size={12} /> : <IconExpand size={12} />}
+              </button>
+            </div>
           </div>
           <div className="editor-body">
             <textarea
@@ -265,7 +306,18 @@ function HomePage(): React.ReactElement {
         <section className="preview-panel">
           <div className="panel-header">
             <span className="panel-header-title">Preview</span>
-            <span className="panel-header-meta">Live render</span>
+            <div className="panel-header-actions">
+              <span className="panel-header-meta">Live render</span>
+              <button
+                type="button"
+                className="panel-header-btn"
+                onClick={handleTogglePreview}
+                title={viewMode === 'preview' ? 'Restore split view' : 'Full screen preview'}
+                aria-label={viewMode === 'preview' ? 'Restore split view' : 'Full screen preview'}
+              >
+                {viewMode === 'preview' ? <IconColumns size={12} /> : <IconExpand size={12} />}
+              </button>
+            </div>
           </div>
           <div className="preview-body">
             <div
