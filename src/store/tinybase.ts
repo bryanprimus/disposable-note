@@ -18,8 +18,7 @@ Start typing your markdown here. This note is disposable and will not be saved w
 \`\`\`js
 console.log("Hello, world!");
 \`\`\`
-
-> **Tip:** Use keyboard shortcuts like Ctrl+B for bold and Ctrl+I for italic.`;
+`;
 
 export const SESSION_STORAGE_KEY = 'disposable_note_session';
 
